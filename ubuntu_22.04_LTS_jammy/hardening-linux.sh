@@ -19,16 +19,18 @@ ufw enable
 
 # TODO: better to backup and create a new config file
 # sshd configuration
+mv $SSH_CONFIG_FILE ${SSH_CONFIG_FILE}_back
+cp ${SSH_CONFIG_FILE}_hardened $SSH_CONFIG_FILE
 echo "Port $SSH_PORT" >> $SSH_CONFIG_FILE
-echo "AllowTcpForwarding no" >> $SSH_CONFIG_FILE
-echo "ClientAliveCountMax 2" >> $SSH_CONFIG_FILE
-echo "LogLevel VERBOSE" >> $SSH_CONFIG_FILE
-echo "MaxAuthTries 3" >> $SSH_CONFIG_FILE
-echo "MaxSessions 2" >> $SSH_CONFIG_FILE
-echo "TCPKeepAlive no" >> $SSH_CONFIG_FILE
-echo "X11Forwarding no" >> $SSH_CONFIG_FILE
-echo "AllowAgentForwarding no" >> $SSH_CONFIG_FILE
-echo "Banner /etc/issue.net" >> $SSH_CONFIG_FILE
+#echo "AllowTcpForwarding no" >> $SSH_CONFIG_FILE
+#echo "ClientAliveCountMax 2" >> $SSH_CONFIG_FILE
+#echo "LogLevel VERBOSE" >> $SSH_CONFIG_FILE
+#echo "MaxAuthTries 3" >> $SSH_CONFIG_FILE
+#echo "MaxSessions 2" >> $SSH_CONFIG_FILE
+#echo "TCPKeepAlive no" >> $SSH_CONFIG_FILE
+#echo "X11Forwarding no" >> $SSH_CONFIG_FILE
+#echo "AllowAgentForwarding no" >> $SSH_CONFIG_FILE
+#echo "Banner /etc/issue.net" >> $SSH_CONFIG_FILE
 systemctl restart sshd
 
 # install and setting tools
