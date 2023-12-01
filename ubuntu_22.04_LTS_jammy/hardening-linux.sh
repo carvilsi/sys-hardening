@@ -165,17 +165,32 @@ GRUB_CONFIG_FILE=/etc/grub.d/10_linux
 #
 #update-grub
 
-# passwords stuff
+# deal with passwords policy 
 # XXX uncomment this
-#echo "SHA_CRYPT_MIN_ROUNDS 5000" >> $LOGING_CONFIG_FILE 
-#echo "SHA_CRYPT_MAX_ROUNDS 6000" >> $LOGING_CONFIG_FILE
+#echo "SHA_CRYPT_MIN_ROUNDS 10000" >> $LOGING_CONFIG_FILE 
+#echo "SHA_CRYPT_MAX_ROUNDS 15000" >> $LOGING_CONFIG_FILE
 
+# TODO: This is not working as expected
+#apt install -y libpam-pwquality
+#sed -i 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs 
+#sed -i 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs 
+#printf "PASS_MAX_DAYS 90 \nPASS_MIN_DAYS 1" >> /etc/login.defs
+#
+#cp -f ./common-auth /etc/pam.d/common-auth
+#chown root:root /etc/pam.d/common-auth
+#chmod 644 /etc/pam.d/common-auth
+#
+#cp -f ./common-password /etc/pam.d/common-password
+#chown root:root /etc/pam.d/common-password
+#chmod 644 /etc/pam.d/common-password
+#
+#exit 0
 
 # TODO: the whole section, mainly the configuration of the tools
 # install and setting tools
-#apt install -y rkhunter aide libpam-cracklib auditd debsums acct ntp sysstat
-#aideinit
-#rkhunter -c
+apt install -y rkhunter aide auditd debsums acct ntp sysstat
+aideinit
+rkhunter -c
 #cp /etc/pam.d/common-password /root/
 
 # check https://www.cyberciti.biz/faq/securing-passwords-libpam-cracklib-on-debian-ubuntu-linux/
@@ -184,20 +199,21 @@ GRUB_CONFIG_FILE=/etc/grub.d/10_linux
 
 # sysstat config
 # vim /etc/default/sysstat
+echo "ENABLED=""true"""
 #   ENABLED="true"
-# systemctl enable sysstat
-# systemctl start sysstat
+systemctl enable sysstat
+systemctl start sysstat
 
 # process accounting config
-#touch /var/log/pacct
-#accton /var/log/pacct
+touch /var/log/pacct
+accton /var/log/pacct
 
 # AUDIT 
 # TODO: check https://wiki.archlinux.org/title/Audit_framework
-#
-#-w /etc/passwd -p rwxa
-#-w /etc/security -p rwxa
-#-a always,exit -S chmod
-# auditctl -l >> /etc/audit/rules.d/additional.rules 
+# this is not working CHECK
+-w /etc/passwd -p rwxa
+-w /etc/security -p rwxa
+-a always,exit -S chmod
+ auditctl -l >> /etc/audit/rules.d/additional.rules 
  
 
