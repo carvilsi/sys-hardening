@@ -86,11 +86,11 @@ UsePAM yes
 #AllowAgentForwarding yes
 #AllowTcpForwarding yes
 #GatewayPorts no
-X11Forwarding yes
+#X11Forwarding yes
 #X11DisplayOffset 10
 #X11UseLocalhost yes
 #PermitTTY yes
-PrintMotd no
+#PrintMotd no
 #PrintLastLog yes
 #TCPKeepAlive yes
 #PermitUserEnvironment no
@@ -116,6 +116,7 @@ Subsystem	sftp	/usr/lib/openssh/sftp-server
 # hardening configurations
         AllowTcpForwarding no
         ClientAliveCountMax 2
+	Compression no
         LogLevel VERBOSE
         MaxAuthTries 3
         MaxSessions 2
