@@ -174,7 +174,8 @@ GRUB_CONFIG_FILE=/etc/grub.d/10_linux
 #apt install -y libpam-pwquality
 #sed -i 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs 
 #sed -i 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs 
-#printf "PASS_MAX_DAYS 90 \nPASS_MIN_DAYS 1" >> /etc/login.defs
+#printf "PASS_MAX_DAYS 2 \nPASS_MIN_DAYS 1" >> /etc/login.defs
+#echo 'TMOUT=900' >> /etc/profile
 #
 #cp -f ./common-auth /etc/pam.d/common-auth
 #chown root:root /etc/pam.d/common-auth
@@ -188,9 +189,10 @@ GRUB_CONFIG_FILE=/etc/grub.d/10_linux
 
 # TODO: the whole section, mainly the configuration of the tools
 # install and setting tools
-apt install -y rkhunter aide auditd debsums acct ntp sysstat
-aideinit
-rkhunter -c
+# XXX uncomment this
+#apt install -y rkhunter aide auditd debsums acct ntp sysstat apt-show-versions
+#aideinit
+#rkhunter -c
 #cp /etc/pam.d/common-password /root/
 
 # check https://www.cyberciti.biz/faq/securing-passwords-libpam-cracklib-on-debian-ubuntu-linux/
@@ -199,21 +201,20 @@ rkhunter -c
 
 # sysstat config
 # vim /etc/default/sysstat
-echo "ENABLED=""true"""
-#   ENABLED="true"
-systemctl enable sysstat
-systemctl start sysstat
+#sed -i 's/ENABLED="false"/ENABLED="true"/g' /etc/default/sysstat
+#systemctl enable sysstat
+#systemctl start sysstat
 
 # process accounting config
-touch /var/log/pacct
-accton /var/log/pacct
+#touch /var/log/pacct
+#accton /var/log/pacct
 
 # AUDIT 
 # TODO: check https://wiki.archlinux.org/title/Audit_framework
 # this is not working CHECK
--w /etc/passwd -p rwxa
--w /etc/security -p rwxa
--a always,exit -S chmod
- auditctl -l >> /etc/audit/rules.d/additional.rules 
+#auditctl -w /etc/passwd -p rwxa
+#auditctl -w /etc/security -p rwxa
+#auditctl -a always,exit -S chmod
+#auditctl -l >> /etc/audit/rules.d/additional.rules 
  
 
