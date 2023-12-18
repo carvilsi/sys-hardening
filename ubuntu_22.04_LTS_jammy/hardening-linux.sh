@@ -91,19 +91,15 @@ if ! grep --quiet "umask 027" /etc/bash.bashrc; then
 	echo "umask 027" >> /etc/bash.bashrc
 fi
 
-#Hardening compilers
+# Removing compilers
 for _compiler in gcc cc clang g++ gcc; do
 	if [ -f /usr/bin/$_compiler ]; then
 		apt purge -y $_compiler
 	fi
 done
 
-#Uninstall tools
-if [ -f /usr/bin/nc ]; then 
-	apt purge -y netcat-openbsd
-fi
-
-for _tool in wget nmap telnet curl; do
+# Uninstall tools
+for _tool in wget nmap telnet curl netcat-openbsd; do
 	if [ -f /usr/bin/$_tool ]; then
 		apt purge -y $_tool
 	fi
@@ -111,10 +107,10 @@ done
 
 sudo apt autoremove -y
 
-#Disable media
+# Disable media
 chmod 000 /media
 
-#Disable USB Storge
+# Disable USB Storge
 echo -e "install usb-storage /bin/true" > $USB_STORAGE_CONF
 
 for _i in /sys/bus/usb/devices/usb*/authorized; do 
@@ -126,10 +122,10 @@ for _i in /sys/bus/usb/devices/usb*/authorized_default; do
 done
 
 
-#Set disable IPv6
+# Set disable IPv6
 cat /etc/*rele* | grep Ubuntu | grep 22.04 && sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="ipv6.disable=1"/g' /etc/default/grub
 
-#Set grub password
+# Set grub password
 if ! grep --quiet "unrestricted" /etc/grub.d/*; then 
 	sed -i 's/CLASS="--class gnu-linux --class gnu --class os"/CLASS="--class gnu-linux --class gnu --class os --unrestricted"/g' $GRUB_CONFIG_FILE
 fi
@@ -155,6 +151,7 @@ echo "SHA_CRYPT_MIN_ROUNDS 10000" >> $LOGING_CONFIG_FILE
 echo "SHA_CRYPT_MAX_ROUNDS 15000" >> $LOGING_CONFIG_FILE
 
 # TODO: This is not working as expected
+# TODO: recheck this section
 apt install -y libpam-pwquality
 sed -i 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs 
 sed -i 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs 
