@@ -6,7 +6,29 @@
 # install lynins
 # https://github.com/CISOfy/lynis.git
 
-# TODO: Check if we have the correct system in this case Ubuntu 22.04 Jammy
+# Check if we have the correct system in this case Ubuntu 22.04 Jammy
+
+DISTRIBUTION_ID="Ubuntu"
+DISTRIBUTION_CODENAME="jammy"
+DISTRIBUTION_RELEASE=23.04
+
+_dist_id=$(lsb_release -is)
+_dist_codename=$(lsb_release -cs)
+_dist_release=$(lsb_release -rs)
+
+if [ "$_dist_id" = $DISTRIBUTION_ID ] && 
+   [ "$_dist_codename" = $DISTRIBUTION_CODENAME ] &&
+   [ $_dist_release = $DISTRIBUTION_RELEASE ]; then
+	echo "$_dist_id $_dist_release ($_dist_codename) [OK]" 
+else
+	echo "This script has been made to run against $_dist_id $_dist_release ($_dist_codename) distro" 
+	if [ "$_dist_id" = $DISTRIBUTION_ID ]; then
+	       echo "Still an $_dist_id system, so maybe some parts of this script could be valid"
+       	       echo "We do not recomend to run it, unless you know what are you doing and reviewng carefuly the whole content and steps."	       
+	fi
+	echo "Exiting now"
+	exit 1
+fi
 
 # CONFIGURATION SECTION
 
@@ -188,4 +210,4 @@ auditctl -w /etc/passwd -p rwxa
 auditctl -w /etc/security -p rwxa
 auditctl -a always,exit -S chmod
 auditctl -l >> /etc/audit/rules.d/additional.rules 
- 
+
