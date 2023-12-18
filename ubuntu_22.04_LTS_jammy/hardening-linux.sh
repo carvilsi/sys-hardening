@@ -10,7 +10,7 @@
 
 DISTRIBUTION_ID="Ubuntu"
 DISTRIBUTION_CODENAME="jammy"
-DISTRIBUTION_RELEASE=23.04
+DISTRIBUTION_RELEASE=22.04
 
 _dist_id=$(lsb_release -is)
 _dist_codename=$(lsb_release -cs)
