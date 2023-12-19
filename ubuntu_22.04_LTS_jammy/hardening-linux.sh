@@ -39,6 +39,7 @@ MODPROBE_CONFIG_FILE=/etc/modprobe.d/blacklist.conf
 LOGING_CONFIG_FILE=/etc/login.defs
 ISSUE_FILE=/etc/issue
 ISSUE_FILE_NET=/etc/issue.net
+ISSUE_FILE_PROFILE=/etc/profile
 MODPROBE_PROTOCOL_CONF=/etc/modprobe.d/CIS.conf
 LIMITS_CONF=/etc/security/limits.conf
 SYSCTL_CONF=/etc/sysctl.conf
@@ -51,6 +52,9 @@ apt upgrade -y
 
 
 # Disabling all ports but ssh on custom port
+if [ ! -f /usr/bin/$_tool ]; then
+        apt install -y ufw
+fi
 ufw allow $SSH_PORT/tcp
 ufw enable
 
@@ -95,18 +99,18 @@ echo "kernel.core_pattern=|/bin/false" >> $SYSCTL_CONF
 sysctl -p $SYSCTL_CONF
 
 #Message disclaimer
-printf "WARNING : Unauthorized access to this system is forbidden and will being " >  $ISSUE_FILE
-printf "prosecuted by law. By accessing this system, you agree that your actions " >> $ISSUE_FILE
-printf "may be monitored if unauthorized usage is suspected.\n" >> $ISSUE_FILE
+MESSAGE_DISCLAIMER="WARNING : Unauthorized access to this system is forbidden and will being prosecuted by law. By accessing this system, you agree that your actions prosecuted by law. By accessing this system, you agree that your actions"
+echo $MESSAGE_DISCLAIMER > $ISSUE_FILE
 cat $ISSUE_FILE > $ISSUE_FILE_NET
+echo "echo $MESSAGE_DISCLAIMER" >> $ISSUE_FILE_PROFILE
 
 #Change UMASK
 if grep --quiet "UMASK.*022" /etc/login.defs; then
 	sed -i 's/022/027/g' /etc/login.defs
 fi
 
-if ! grep --quiet "umask 027" /etc/profile; then
-	echo "umask 027" >> /etc/profile
+if ! grep --quiet "umask 027" $ISSUE_FILE_PROFILE; then
+	echo "umask 027" >> $ISSUE_FILE_PROFILE
 fi
 
 if ! grep --quiet "umask 027" /etc/bash.bashrc; then
@@ -142,7 +146,6 @@ done
 for _i in /sys/bus/usb/devices/usb*/authorized_default; do 
 	echo 0 > $_i;
 done
-
 
 # Set disable IPv6
 cat /etc/*rele* | grep Ubuntu | grep 22.04 && sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="ipv6.disable=1"/g' /etc/default/grub
