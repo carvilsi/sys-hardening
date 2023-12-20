@@ -106,8 +106,8 @@ cat $ISSUE_FILE > $ISSUE_FILE_NET
 printf "\necho \"$NOTICE_HEADER\"\necho \"$MESSAGE_DISCLAIMER\"\n" >> $PROFILE_FILE
 
 #Change UMASK
-if grep --quiet "UMASK.*022" /etc/login.defs; then
-	sed -i 's/022/027/g' /etc/login.defs
+if grep --quiet "UMASK.*022" $LOGING_CONFIG_FILE; then
+	sed -i 's/022/027/g' $LOGING_CONFIG_FILE
 fi
 
 if ! grep --quiet "umask 027" $PROFILE_FILE; then
