@@ -39,7 +39,7 @@ MODPROBE_CONFIG_FILE=/etc/modprobe.d/blacklist.conf
 LOGING_CONFIG_FILE=/etc/login.defs
 ISSUE_FILE=/etc/issue
 ISSUE_FILE_NET=/etc/issue.net
-ISSUE_FILE_PROFILE=/etc/profile
+PROFILE_FILE=/etc/profile
 MODPROBE_PROTOCOL_CONF=/etc/modprobe.d/CIS.conf
 LIMITS_CONF=/etc/security/limits.conf
 SYSCTL_CONF=/etc/sysctl.conf
@@ -103,15 +103,15 @@ NOTICE_HEADER="################ NOTICE ################"
 MESSAGE_DISCLAIMER="WARNING: Unauthorized access to this system is forbidden and will being prosecuted by law. By accessing this system, you agree that your actions prosecuted by law. By accessing this system, you agree that your actions"
 printf "$NOTICE_HEADER\n$MESSAGE_DISCLAIMER" > $ISSUE_FILE
 cat $ISSUE_FILE > $ISSUE_FILE_NET
-printf "\necho \"$NOTICE_HEADER\"\necho \"$MESSAGE_DISCLAIMER\"" >> $ISSUE_FILE_PROFILE
+printf "\necho \"$NOTICE_HEADER\"\necho \"$MESSAGE_DISCLAIMER\"\n" >> $PROFILE_FILE
 
 #Change UMASK
 if grep --quiet "UMASK.*022" /etc/login.defs; then
 	sed -i 's/022/027/g' /etc/login.defs
 fi
 
-if ! grep --quiet "umask 027" $ISSUE_FILE_PROFILE; then
-	echo "umask 027" >> $ISSUE_FILE_PROFILE
+if ! grep --quiet "umask 027" $PROFILE_FILE; then
+	echo "umask 027" >> $PROFILE_FILE
 fi
 
 if ! grep --quiet "umask 027" /etc/bash.bashrc; then
@@ -179,10 +179,10 @@ echo "SHA_CRYPT_MAX_ROUNDS 15000" >> $LOGING_CONFIG_FILE
 # TODO: This is not working as expected
 # TODO: recheck this section
 apt install -y libpam-pwquality
-sed -i 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g' /etc/login.defs 
-sed -i 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g' /etc/login.defs 
-printf "PASS_MAX_DAYS 2 \nPASS_MIN_DAYS 1" >> /etc/login.defs
-echo 'TMOUT=900' >> /etc/profile
+sed -i 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g'     $LOGING_CONFIG_FILE 
+sed -i 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g'     $LOGING_CONFIG_FILE
+printf "PASS_MAX_DAYS 2 \nPASS_MIN_DAYS 1" >> $LOGING_CONFIG_FILE
+echo 'TMOUT=900' >> $PROFILE_FILE
 
 cp -f ./common-auth /etc/pam.d/common-auth
 chown root:root /etc/pam.d/common-auth
