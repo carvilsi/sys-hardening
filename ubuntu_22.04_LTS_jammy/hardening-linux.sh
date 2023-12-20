@@ -99,10 +99,11 @@ echo "kernel.core_pattern=|/bin/false" >> $SYSCTL_CONF
 sysctl -p $SYSCTL_CONF
 
 #Message disclaimer
-MESSAGE_DISCLAIMER="WARNING : Unauthorized access to this system is forbidden and will being prosecuted by law. By accessing this system, you agree that your actions prosecuted by law. By accessing this system, you agree that your actions"
-echo $MESSAGE_DISCLAIMER > $ISSUE_FILE
+NOTICE_HEADER="################ NOTICE ################"
+MESSAGE_DISCLAIMER="WARNING: Unauthorized access to this system is forbidden and will being prosecuted by law. By accessing this system, you agree that your actions prosecuted by law. By accessing this system, you agree that your actions"
+printf "$NOTICE_HEADER\n$MESSAGE_DISCLAIMER" > $ISSUE_FILE
 cat $ISSUE_FILE > $ISSUE_FILE_NET
-echo "echo $MESSAGE_DISCLAIMER" >> $ISSUE_FILE_PROFILE
+printf "\necho \"$NOTICE_HEADER\"\necho \"$MESSAGE_DISCLAIMER\"" >> $ISSUE_FILE_PROFILE
 
 #Change UMASK
 if grep --quiet "UMASK.*022" /etc/login.defs; then
@@ -206,9 +207,7 @@ systemctl start sysstat
 touch /var/log/pacct
 accton /var/log/pacct
 
-# AUDIT 
-# TODO: check https://wiki.archlinux.org/title/Audit_framework
-# this is not working CHECK
+# Audit 
 auditctl -w /etc/passwd -p rwxa
 auditctl -w /etc/security -p rwxa
 auditctl -a always,exit -S chmod
