@@ -45,6 +45,10 @@ LIMITS_CONF=/etc/security/limits.conf
 SYSCTL_CONF=/etc/sysctl.conf
 USB_STORAGE_CONF=/etc/modprobe.d/usb_storage.conf
 GRUB_CONFIG_FILE=/etc/grub.d/10_linux
+PASSWORD_QUALITY=/etc/security/pwquality.conf
+PASS_MIN_DAYS=1
+PASS_MAX_DAYS=60
+PASS_INACTIVE=30
 
 # do the update/upgrade for the system
 apt update
@@ -179,10 +183,39 @@ echo "SHA_CRYPT_MAX_ROUNDS 15000" >> $LOGING_CONFIG_FILE
 # TODO: This is not working as expected
 # TODO: recheck this section
 apt install -y libpam-pwquality
-sed -i 's/PASS_MAX_DAYS/#PASS_MAX_DAYS/g'     $LOGING_CONFIG_FILE 
-sed -i 's/PASS_MIN_DAYS/#PASS_MIN_DAYS/g'     $LOGING_CONFIG_FILE
-printf "PASS_MAX_DAYS 2 \nPASS_MIN_DAYS 1" >> $LOGING_CONFIG_FILE
-echo 'TMOUT=900' >> $PROFILE_FILE
+
+printf "\n# HARDENING CONFIG (script)\n" >> $PASSWORD_QUALITY
+printf "\nminlen = 14\n" >> $PASSWORD_QUALITY
+printf "minclass = 4\n"  >> $PASSWORD_QUALITY
+
+cp ./common-auth /etc/pam.d/common-auth
+
+printf "\naccount       required        pam_faillock.so" >> /etc/pam.d/common-account
+
+printf "\ndeny = 4\nfail_interval = 900\nunlock time = 600" >> /etc/security/faillock.conf
+printf "\n# if a user is blocked execute:" >> /etc/security/faillock.conf
+printf "\n# /usr/sbin/faillock --user username --reset" >> /etc/security/faillock.conf
+
+cp ./common-password /etc/pam.d/common-password
+
+sed -i 's/ENCRYPT_METHOD SHA512/ENCRYPT_METHOD yescrypt/g'     $LOGING_CONFIG_FILE
+sed -i "s/PASS_MIN_DAYS.*0/PASS_MIN_DAYS $PASS_MIN_DAYS/g"     $LOGING_CONFIG_FILE
+sed -i "s/PASS_MAX_DAYS.*99999/PASS_MAX_DAYS $PASS_MAX_DAYS/g" $LOGING_CONFIG_FILE
+
+useradd -D -f $PASS_INACTIVE
+
+# Add here the users
+for _user in char; do
+        chage --mindays  $PASS_MIN_DAYS $_user
+        chage --mindays  $PASS_MAX_DAYS $_user
+        chage --inactive $PASS_INACTIVE $_user
+done
+
+_root_default_group=$(grep "^root:" /etc/passwd | cut -f4 -d:)
+if [ ! $_root_default_group = 0 ]; then
+        usermod -g 0 root
+fi
+printf "\nTMOUT=900\nreadonly TMOUT\nexport TMOUT\n" >> $PROFILE_FILE
 
 cp -f ./common-auth /etc/pam.d/common-auth
 chown root:root /etc/pam.d/common-auth
