@@ -246,3 +246,5 @@ auditctl -w /etc/security -p rwxa
 auditctl -a always,exit -S chmod
 auditctl -l >> /etc/audit/rules.d/additional.rules 
 
+# local users home folder permissions
+sh check_and_fix_home_directories_permissions.sh
