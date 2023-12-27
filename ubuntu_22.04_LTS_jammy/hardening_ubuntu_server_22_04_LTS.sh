@@ -76,6 +76,8 @@ PASSWORD_QUALITY=/etc/security/pwquality.conf
 PASS_MIN_DAYS=1
 PASS_MAX_DAYS=60
 PASS_INACTIVE=30
+COMPILERS="gcc cc clang g++ gcc"
+TOOLS="wget nmap telnet curl netcat-openbsd"
 NOTICE_HEADER="################ NOTICE ################"
 MESSAGE_DISCLAIMER="WARNING: Unauthorized access to this system is forbidden and will being prosecuted by law. By accessing this system, you agree that your actions prosecuted by law. By accessing this system, you agree that your actions"
 
@@ -149,14 +151,14 @@ if ! grep --quiet "umask 027" /etc/bash.bashrc; then
 fi
 
 # Removing compilers
-for _compiler in gcc cc clang g++ gcc; do
+for _compiler in $COMPILERS; do
 	if [ -f /usr/bin/$_compiler ]; then
 		apt purge -y $_compiler
 	fi
 done
 
 # Uninstall tools
-for _tool in wget nmap telnet curl netcat-openbsd; do
+for _tool in $TOOLS; do
 	if [ -f /usr/bin/$_tool ]; then
 		apt purge -y $_tool
 	fi
@@ -230,9 +232,10 @@ sed -i "s/PASS_MAX_DAYS.*99999/PASS_MAX_DAYS $PASS_MAX_DAYS/g" $LOGING_CONFIG_FI
 
 useradd -D -f $PASS_INACTIVE
 
-# TODO: do something with this!!!!!!!!
-# Add here the users
-for _user in char; do
+# Hardening the local users
+echo "Please provide the list of local users (space separated):"
+read _users $*
+for _user in $_users; do
         chage --mindays  $PASS_MIN_DAYS $_user
         chage --mindays  $PASS_MAX_DAYS $_user
         chage --inactive $PASS_INACTIVE $_user
