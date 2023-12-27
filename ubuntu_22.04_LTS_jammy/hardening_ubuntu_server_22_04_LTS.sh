@@ -177,6 +177,7 @@ echo 'EOF' >> $GRUB_CONFIG_FILE
 update-grub
 
 # deal with passwords policy 
+
 echo "SHA_CRYPT_MIN_ROUNDS 10000" >> $LOGING_CONFIG_FILE 
 echo "SHA_CRYPT_MAX_ROUNDS 15000" >> $LOGING_CONFIG_FILE
 
@@ -241,6 +242,7 @@ touch /var/log/pacct
 accton /var/log/pacct
 
 # Audit 
+# TODO: improve this part
 auditctl -w /etc/passwd -p rwxa
 auditctl -w /etc/security -p rwxa
 auditctl -a always,exit -S chmod
@@ -248,3 +250,4 @@ auditctl -l >> /etc/audit/rules.d/additional.rules
 
 # local users home folder permissions
 sh check_and_fix_home_directories_permissions.sh
+

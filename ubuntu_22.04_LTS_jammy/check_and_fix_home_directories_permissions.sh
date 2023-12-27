@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 {
 	output=""
 	perm_mask='0027'

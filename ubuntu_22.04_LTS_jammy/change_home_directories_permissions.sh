@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 {
 	perm_mask='0027'
 	maxperm="$( printf '%o' $(( 0777 & ~$perm_mask)) )"
