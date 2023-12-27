@@ -7,8 +7,11 @@ Copy the whole content to the target system and execute the script with sudo.
 ## Distro details
 
 **Distributor ID:** Ubuntu
+
 **Description:** Ubuntu 22.04.3 LTS
+
 **Release:** 22.04
+
 **Codename:** jammy
 
 ## Audit
@@ -16,6 +19,7 @@ Copy the whole content to the target system and execute the script with sudo.
 Audited with [lynis](https://github.com/CISOfy/lynis.git) over a clean install and directories `/var` and `/home` and `/tmp` at diferent partitions. 
 
 **Score before:** 64
+
 **Score after:** 84
 
 ## Notes:
