@@ -1,13 +1,40 @@
 #!/bin/bash
 #
+################
+# MIT License
+# 
+# Copyright (c) 2023 Carlos Villanueva <char@omg.lol> 
+# https://github.com/carvilsi/sys-hardening
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+################
+
+
 # Execute this script as sudo
 # Note that this some steps requires human actions
 
-# install lynins
+# install lynins in order to do the audit
 # https://github.com/CISOfy/lynis.git
 
-# Check if we have the correct system in this case Ubuntu 22.04 Jammy
 
+
+# Check if we have the correct system in this case Ubuntu 22.04 Jammy
 DISTRIBUTION_ID="Ubuntu"
 DISTRIBUTION_CODENAME="jammy"
 DISTRIBUTION_RELEASE=22.04
@@ -49,11 +76,12 @@ PASSWORD_QUALITY=/etc/security/pwquality.conf
 PASS_MIN_DAYS=1
 PASS_MAX_DAYS=60
 PASS_INACTIVE=30
+NOTICE_HEADER="################ NOTICE ################"
+MESSAGE_DISCLAIMER="WARNING: Unauthorized access to this system is forbidden and will being prosecuted by law. By accessing this system, you agree that your actions prosecuted by law. By accessing this system, you agree that your actions"
 
 # do the update/upgrade for the system
 apt update
 apt upgrade -y
-
 
 # Disabling all ports but ssh on custom port
 if [ ! -f /usr/bin/$_tool ]; then
@@ -103,8 +131,6 @@ echo "kernel.core_pattern=|/bin/false" >> $SYSCTL_CONF
 sysctl -p $SYSCTL_CONF
 
 #Message disclaimer
-NOTICE_HEADER="################ NOTICE ################"
-MESSAGE_DISCLAIMER="WARNING: Unauthorized access to this system is forbidden and will being prosecuted by law. By accessing this system, you agree that your actions prosecuted by law. By accessing this system, you agree that your actions"
 printf "$NOTICE_HEADER\n$MESSAGE_DISCLAIMER" > $ISSUE_FILE
 cat $ISSUE_FILE > $ISSUE_FILE_NET
 printf "\necho \"$NOTICE_HEADER\"\necho \"$MESSAGE_DISCLAIMER\"\n" >> $PROFILE_FILE
@@ -181,8 +207,6 @@ update-grub
 echo "SHA_CRYPT_MIN_ROUNDS 10000" >> $LOGING_CONFIG_FILE 
 echo "SHA_CRYPT_MAX_ROUNDS 15000" >> $LOGING_CONFIG_FILE
 
-# TODO: This is not working as expected
-# TODO: recheck this section
 apt install -y libpam-pwquality
 
 printf "\n# HARDENING CONFIG (script)\n" >> $PASSWORD_QUALITY
@@ -199,12 +223,14 @@ printf "\n# /usr/sbin/faillock --user username --reset" >> /etc/security/failloc
 
 cp ./common-password /etc/pam.d/common-password
 
+# TODO: recheck this section
 sed -i 's/ENCRYPT_METHOD SHA512/ENCRYPT_METHOD yescrypt/g'     $LOGING_CONFIG_FILE
 sed -i "s/PASS_MIN_DAYS.*0/PASS_MIN_DAYS $PASS_MIN_DAYS/g"     $LOGING_CONFIG_FILE
 sed -i "s/PASS_MAX_DAYS.*99999/PASS_MAX_DAYS $PASS_MAX_DAYS/g" $LOGING_CONFIG_FILE
 
 useradd -D -f $PASS_INACTIVE
 
+# TODO: do something with this!!!!!!!!
 # Add here the users
 for _user in char; do
         chage --mindays  $PASS_MIN_DAYS $_user
