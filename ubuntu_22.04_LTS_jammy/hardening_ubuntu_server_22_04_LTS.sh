@@ -254,12 +254,12 @@ chmod 644 /etc/pam.d/common-auth
 cp -f ./common-password /etc/pam.d/common-password
 chown root:root /etc/pam.d/common-password
 chmod 644 /etc/pam.d/common-password
+cp /etc/pam.d/common-password /root/
 
 # install and setting tools
 apt install -y rkhunter aide auditd debsums acct ntp sysstat apt-show-versions
 aideinit
-rkhunter -c
-cp /etc/pam.d/common-password /root/
+rkhunter -c --sk
 
 # sysstat config
 sed -i 's/ENABLED="false"/ENABLED="true"/g' /etc/default/sysstat
