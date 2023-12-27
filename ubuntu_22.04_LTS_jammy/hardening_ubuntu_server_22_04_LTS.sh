@@ -86,7 +86,7 @@ apt update
 apt upgrade -y
 
 # Disabling all ports but ssh on custom port
-if [ ! -f /usr/bin/$_tool ]; then
+if [ ! -f /usr/sbin/ufw ]; then
         apt install -y ufw
 fi
 ufw allow $SSH_PORT/tcp
