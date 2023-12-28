@@ -4,6 +4,8 @@
 
 Copy the whole content to the target system and execute the script with sudo.
 
+`$ sh hardening_ubuntu_server_22_04_LTS.sh`
+
 ## Distro details
 
 **Distributor ID:** Ubuntu
