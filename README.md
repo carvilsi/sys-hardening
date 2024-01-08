@@ -5,7 +5,8 @@ A place to curate some hardening scripts for different systems. These scripts tr
 ---
 
 Feedback from usage and contributions are very welcome.
-Also if you like it, please leave a start I would appreciate it ;)
+
+Also if you like it, please leave a :star: I would appreciate it ;)
 
 <3 & Hack the Planet!
 
