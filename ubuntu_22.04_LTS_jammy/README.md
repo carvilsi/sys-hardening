@@ -29,3 +29,12 @@ Audited with [lynis](https://github.com/CISOfy/lynis.git) over a clean install a
 - Before runing this script, we recomend to read it and understand it in order to know what are you doing.
 - Script based/inspired on Jesús Amorós from the course content [Hardening en Sistemas Linux](https://academiadehackers.es) and [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks).
 
+ 
+---
+
+Feedback from usage and contributions are very welcome.
+
+Also if you like it, please leave a :star: I would appreciate it ;)
+
+<3 & Hack the Planet!
+
