@@ -34,7 +34,7 @@
 
 
 
-# Check if we have the correct system in this case Ubuntu 22.04 Jammy
+# Check if we have the correct system in this case Ubuntu 24.04 Noble 
 DISTRIBUTION_ID="Ubuntu"
 DISTRIBUTION_CODENAME="noble"
 DISTRIBUTION_RELEASE=24.04
@@ -257,9 +257,11 @@ chmod 644 /etc/pam.d/common-password
 cp /etc/pam.d/common-password /root/
 
 # install and setting tools
-apt install -y rkhunter aide auditd debsums acct ntp ntpsec sysstat apt-show-versions
+apt install -y rkhunter aide auditd debsums acct ntp ntpsec sysstat apt-show-versions apt-listchanges fail2ban
+
 aideinit
 rkhunter -c --sk
+cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
 
 # sysstat config
 sed -i 's/ENABLED="false"/ENABLED="true"/g' /etc/default/sysstat
@@ -280,3 +282,4 @@ auditctl -l >> /etc/audit/rules.d/additional.rules
 # local users home folder permissions
 sh check_and_fix_home_directories_permissions.sh
 
+echo "Hardening script for $DISTRIBUTION_ID $DISTRIBUTION_RELEASE ($DISTRIBUTION_CODENAME) done."

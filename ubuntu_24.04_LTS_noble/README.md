@@ -22,7 +22,7 @@ Audited with [lynis](https://github.com/CISOfy/lynis.git) over a clean install a
 
 **Score before:** 58 
 
-**Score after:** ?
+**Score after:** 84
 
 ## Notes:
 
