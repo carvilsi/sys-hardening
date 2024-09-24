@@ -237,7 +237,7 @@ echo "Please provide the list of local users (space separated):"
 read _users $*
 for _user in $_users; do
         chage --mindays  $PASS_MIN_DAYS $_user
-        chage --mindays  $PASS_MAX_DAYS $_user
+        chage --maxdays  $PASS_MAX_DAYS $_user
         chage --inactive $PASS_INACTIVE $_user
 done
 
