@@ -215,15 +215,12 @@ printf "\n# HARDENING CONFIG (script)\n" >> $PASSWORD_QUALITY
 printf "\nminlen = 14\n" >> $PASSWORD_QUALITY
 printf "minclass = 4\n"  >> $PASSWORD_QUALITY
 
-cp ./common-auth /etc/pam.d/common-auth
-
 printf "\naccount       required        pam_faillock.so" >> /etc/pam.d/common-account
 
 printf "\ndeny = 4\nfail_interval = 900\nunlock time = 600" >> /etc/security/faillock.conf
 printf "\n# if a user is blocked execute:" >> /etc/security/faillock.conf
 printf "\n# /usr/sbin/faillock --user username --reset" >> /etc/security/faillock.conf
 
-cp ./common-password /etc/pam.d/common-password
 
 # TODO: recheck this section
 sed -i 's/ENCRYPT_METHOD SHA512/ENCRYPT_METHOD yescrypt/g'     $LOGING_CONFIG_FILE
