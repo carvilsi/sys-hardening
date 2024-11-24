@@ -59,8 +59,11 @@ else
                        echo "Since major versions still same you can override the execution with"
                        echo "$ sh hardening_ubuntu_server_24_04_LTS.sh override_dist"
                        if [ "$1" = "override_dist" ]; then
-                               continue;
+                               echo "overrading distro check..."
                        fi
+               else
+                       echo "Exiting now"
+                       exit 1
                fi
 	fi
 	echo "Exiting now"
