@@ -32,7 +32,10 @@
 # install lynins in order to do the audit
 # https://github.com/CISOfy/lynis.git
 
-
+leaving() {
+        echo "Exiting now"
+        exit 1
+}
 
 # Check if we have the correct system in this case Ubuntu 24.04 Noble 
 DISTRIBUTION_ID="Ubuntu"
@@ -60,14 +63,12 @@ else
                        echo "$ sh hardening_ubuntu_server_24_04_LTS.sh override_dist"
                        if [ "$1" = "override_dist" ]; then
                                echo "overrading distro check..."
-                       fi
-               else
-                       echo "Exiting now"
-                       exit 1
+               	       else
+                               leaving 
+		       fi
                fi
         else
-                echo "Exiting now"
-                exit 1
+                leaving 
 	fi
 fi
 
