@@ -43,6 +43,7 @@ DISTRIBUTION_MAJOR=${DISTRIBUTION_RELEASE%.*}
 _dist_id=$(lsb_release -is)
 _dist_codename=$(lsb_release -cs)
 _dist_release=$(lsb_release -rs)
+_dist_release_major=${_dist_release%.*}
 
 if [ "$_dist_id" = $DISTRIBUTION_ID ] && 
    [ "$_dist_codename" = $DISTRIBUTION_CODENAME ] &&
@@ -54,8 +55,7 @@ else
 	if [ "$_dist_id" = $DISTRIBUTION_ID ]; then
 	       echo "Still an $_dist_id system, so maybe some parts of this script could be valid"
        	       echo "We do not recomend to run it, unless you know what are you doing and reviewng carefuly the whole content and steps."	       
-               _major=${_dist_release%.*}
-               if [ "$_major" = $DISTRIBUTION_MAJOR ]; then
+               if [ "$_dist_release_major" = $DISTRIBUTION_MAJOR ]; then
                        echo "Since major versions still same you can override the execution with"
                        echo "$ sh hardening_ubuntu_server_24_04_LTS.sh override_dist"
                        if [ "$1" = "override_dist" ]; then
@@ -65,9 +65,10 @@ else
                        echo "Exiting now"
                        exit 1
                fi
+        else
+                echo "Exiting now"
+                exit 1
 	fi
-	echo "Exiting now"
-	exit 1
 fi
 
 # CONFIGURATION SECTION
