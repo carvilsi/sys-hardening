@@ -48,7 +48,8 @@ if [ "$_dist_id" = $DISTRIBUTION_ID ] &&
    [ $_dist_release = $DISTRIBUTION_RELEASE ]; then
 	echo "$_dist_id $_dist_release ($_dist_codename) [OK]" 
 else
-	echo "This script has been made to run against $_dist_id $_dist_release ($_dist_codename) distro" 
+	echo "This script has been made to run against $DISTRIBUTION_ID $DISTRIBUTION_RELEASE ($DISTRIBUTION_CODENAME) distro" 
+	echo "but $_dist_id $_dist_release ($_dist_codename) distro has been found" 
 	if [ "$_dist_id" = $DISTRIBUTION_ID ]; then
 	       echo "Still an $_dist_id system, so maybe some parts of this script could be valid"
        	       echo "We do not recomend to run it, unless you know what are you doing and reviewng carefuly the whole content and steps."	       
